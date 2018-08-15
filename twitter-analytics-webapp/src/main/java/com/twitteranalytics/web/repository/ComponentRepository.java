@@ -1,4 +1,4 @@
-package com.twitteranalytics.web;
+package com.twitteranalytics.web.repository;
 
 import com.twitteranalytics.web.domain.Component;
 import org.springframework.data.mongodb.repository.MongoRepository;
