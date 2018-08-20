@@ -13,7 +13,8 @@ class Login extends Component {
       signupId: '',
       signupPassword: '',
       signupConfirmPassword: '',
-      signupError: null
+      signupError: null,
+      signupSuccess: null
     }
   }
 
@@ -42,24 +43,34 @@ class Login extends Component {
       .catch(() => this.setState({loginError: 'Credenciais inválidas.'}));
   }
 
-  handleSignup() {
-    fetch('http://localhost:8080/users', {
-      method: 'post',
-      headers: new Headers({
-        'Content-Type': 'application/json'
-      }),
-      body: { //test register
-        "id": "user2",
-        "password": "pass",
-        "name": "User name"
-      }
-    })
-      .then(res => res.json())
-      .then(res => {
-        let expiryDate = new Date(new Date().getTime() + res['expires_in'] * 1000);
-        Cookies.set('access_token', res['access_token'], {expires: expiryDate});
-        this.props.history.push('/');
-      });
+  handleSignup(e) {
+    e.preventDefault();
+    if (!this.state.signupId || !this.state.signupPassword || !this.state.signupConfirmPassword) {
+      this.setState({signupError: 'Todos os campos devem ser preenchidos.'});
+    }
+    else if (this.state.signupPassword !== this.state.signupConfirmPassword) {
+      this.setState({signupError: 'As senhas não são iguais.'});
+    }
+    else {
+      fetch('http://localhost:8080/users/' + this.state.signupId)
+        .then(res => {
+          if (res.status === 404) {
+            fetch('http://localhost:8080/users', {
+              method: 'post',
+              headers: new Headers({
+                'Content-Type': 'application/json'
+              }),
+              body: JSON.stringify({
+                id: this.state.signupId,
+                password: this.state.signupPassword,
+              })
+            })
+              .then(() => this.setState({signupSuccess: true, signupError: null}))
+          } else {
+            this.setState({signupError: 'Usuário já em uso.'});
+          }
+        })
+    }
   }
 
   render() {
@@ -91,20 +102,26 @@ class Login extends Component {
             <Jumbotron>
               <h2 align="middle">Sign up</h2>
               {this.state.signupError ? <Alert color="danger">{this.state.signupError}</Alert> : null}
-              <Form>
+              {this.state.signupSuccess && !this.state.signupError ?
+                <Alert color="success">Usuário criado com sucesso.</Alert> : null}
+              <Form onSubmit={this.handleSignup.bind(this)}>
                 <FormGroup>
                   <Label for="signup-user">Usuário</Label>
-                  <Input name="user" id="signup-user"/>
+                  <Input name="user" id="signup-user" value={this.state.signupId}
+                         onChange={e => this.setState({signupId: e.target.value})}/>
                 </FormGroup>
                 <FormGroup>
                   <Label for="signup-password">Senha</Label>
-                  <Input type="password" name="password" id="signup-password"/>
+                  <Input type="password" name="password" id="signup-password" value={this.state.signupPassword}
+                         onChange={e => this.setState({signupPassword: e.target.value})}/>
                 </FormGroup>
                 <FormGroup>
                   <Label for="confirm-password">Confirmar Senha</Label>
-                  <Input type="password" name="confirm-password" id="confirm-password"/>
+                  <Input type="password" name="confirm-password" id="confirm-password"
+                         value={this.state.signupConfirmPassword}
+                         onChange={e => this.setState({signupConfirmPassword: e.target.value})}/>
                 </FormGroup>
-                <Button block onClick={this.handleSignup.bind(this)}>Sign up</Button>
+                <Button block>Sign up</Button>
               </Form>
             </Jumbotron>
           </Col>

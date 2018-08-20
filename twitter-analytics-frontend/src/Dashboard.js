@@ -11,10 +11,9 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    let token = Cookies.get('access_token');
     fetch('http://localhost:8080/components', {
       headers: new Headers({
-        'Authorization': 'Bearer ' + token,
+        'Authorization': 'Bearer ' + Cookies.get('access_token'),
       }),
     })
       .then(resp => resp.json())

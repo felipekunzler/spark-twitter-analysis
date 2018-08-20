@@ -35,10 +35,11 @@ public class Application implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         componentRepository.deleteAll();
+        userRepository.deleteAll();
         mockComponents();
 
-        userRepository.save(new User("admin", hash("123"), "Administrador"));
-        userRepository.save(new User("user", hash("123"), "User"));
+        userRepository.save(new User("admin", hash("123")));
+        userRepository.save(new User("user", hash("123")));
 
         System.out.println("Component found with findAll():");
         componentRepository.findAll().forEach(System.out::println);
