@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.annotation.Resource;
+import java.time.LocalDate;
 
 @SpringBootApplication
 public class Application implements CommandLineRunner {
@@ -34,8 +35,7 @@ public class Application implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         componentRepository.deleteAll();
-        componentRepository.save(new Component("a", "ca"));
-        componentRepository.save(new Component("b", "cb"));
+        mockComponents();
 
         userRepository.save(new User("admin", hash("123"), "Administrador"));
         userRepository.save(new User("user", hash("123"), "User"));
@@ -45,6 +45,25 @@ public class Application implements CommandLineRunner {
 
         System.out.println("User found with findAll():");
         userRepository.findAll().forEach(System.out::println);
+    }
+
+    private void mockComponents() {
+        Component c1 = new Component();
+        c1.setKeyword("Microsoft");
+        c1.setFrom(LocalDate.now().minusDays(3));
+        c1.setTo(LocalDate.now().minusDays(1));
+        c1.setUser("user");
+        c1.setType("chart");
+
+        Component c2 = new Component();
+        c2.setKeyword("Google");
+        c2.setFrom(LocalDate.now().minusDays(3));
+        c2.setTo(LocalDate.now().minusDays(1));
+        c2.setUser("user");
+        c2.setType("trends");
+        componentRepository.save(c1);
+        componentRepository.save(c2);
+
     }
 
     private String hash(String password) {

@@ -2,9 +2,13 @@ package com.twitteranalytics.web.repository;
 
 import com.twitteranalytics.web.domain.Component;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.repository.query.Param;
+
+import java.util.Collection;
+import java.util.List;
 
 public interface ComponentRepository extends MongoRepository<Component, String> {
 
-    Component findByName(String name);
+    Collection<Component> findAllByUser(@Param("user") String user);
 
 }

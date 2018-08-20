@@ -12,7 +12,9 @@ public class DataController {
     @GetMapping("/analytics")
     public Component getData(Principal principal) {
         System.out.println(principal);
-        return new Component("data", "data");
+        Component c = new Component();
+        c.setKeyword("Microsoft");
+        return c;
     }
 
 }
