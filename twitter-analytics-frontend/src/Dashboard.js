@@ -23,16 +23,10 @@ class Dashboard extends Component {
       });
   }
 
-  handleSignOut() {
-    Cookies.remove('access_token');
-    this.props.history.push('/');
-  }
-
   render() {
     return (
       <div>
         <div>Dashboard page here</div>
-        <button onClick={this.handleSignOut.bind(this)}>Sign out</button>
         <div>
           {this.state.userComponents.map((d, idx) => {
             return (<li key={idx}>{d.name}</li>)
