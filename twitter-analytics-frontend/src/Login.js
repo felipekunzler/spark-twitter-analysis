@@ -92,7 +92,8 @@ class Login extends Component {
                   <Input type="password" name="password" id="login-password" value={this.state.loginPassword}
                          onChange={e => this.setState({loginPassword: e.target.value})}/>
                 </FormGroup>
-                <Button block>Login</Button>
+
+                <Button className={'login-button'} block>Login</Button>
               </Form>
             </Jumbotron>
           </Col>
@@ -121,7 +122,7 @@ class Login extends Component {
                          value={this.state.signupConfirmPassword}
                          onChange={e => this.setState({signupConfirmPassword: e.target.value})}/>
                 </FormGroup>
-                <Button block>Sign up</Button>
+                <Button className={'login-button'} block>Sign up</Button>
               </Form>
             </Jumbotron>
           </Col>

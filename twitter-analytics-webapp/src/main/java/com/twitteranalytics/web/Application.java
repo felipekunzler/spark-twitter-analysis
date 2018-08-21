@@ -62,8 +62,16 @@ public class Application implements CommandLineRunner {
         c2.setTo(LocalDate.now().minusDays(1));
         c2.setUser("user");
         c2.setType("trends");
+
+        Component c3 = new Component();
+        c3.setKeyword("Feevale");
+        c3.setFrom(LocalDate.now().minusDays(10));
+        c3.setTo(LocalDate.now().minusDays(5));
+        c3.setUser("user");
+        c3.setType("trends");
         componentRepository.save(c1);
         componentRepository.save(c2);
+        componentRepository.save(c3);
 
     }
 

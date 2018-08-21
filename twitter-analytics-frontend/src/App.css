@@ -1,6 +1,10 @@
 
 .col .jumbotron {
     padding: 1rem 1rem;
+    background-color: #f8f9fa;
+    border: solid;
+    border-width: .5px;
+    border-color: #dce9ff;
 }
 
 .navbar {
@@ -13,4 +17,20 @@
 
 .current-user {
     font-weight: bold;
+}
+
+.row .card {
+    margin-bottom: 30px;
+    padding-bottom: 10px;
+    border-color: #dce9ff;
+
+}
+
+form .btn.login-button:hover {
+    background-color: #7094b5cf !important;
+}
+
+form .btn.login-button, .btn.login-button:active {
+    background-color: #5689b7f0 !important;
+    border-color: #5689b7f0 !important;
 }
