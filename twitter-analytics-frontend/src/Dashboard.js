@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import Cookies from 'js-cookie';
 import {Button, Card, CardBody, CardImg, CardSubtitle, CardText, CardTitle, Col, Container, Row} from "reactstrap";
-import KeywordComponent from "./KeywordComponent";
 import Chart from "chart.js";
+import DataComponent from "./DataComponent";
 
 class Dashboard extends Component {
 
@@ -22,7 +22,6 @@ class Dashboard extends Component {
       .then(resp => resp.json())
       .then(json => {
         this.setState({userComponents: json['_embedded']['components']});
-        console.log(this.state.userComponents);
       });
     new Chart(this.node, {
       type: "pie",
@@ -42,7 +41,7 @@ class Dashboard extends Component {
       <Container>
         <Row>
           {this.state.userComponents.map((data, i) => {
-            return (<KeywordComponent comp={data} key={i}/>)
+              return (<DataComponent comp={data} key={i}/>)
           })}
           <Col lg='6'>
             <Card>

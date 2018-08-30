@@ -1,34 +1,61 @@
 import React, {Component} from 'react';
-import {Card, CardBody, CardImg, CardSubtitle, CardTitle, Col} from "reactstrap";
+import {Button, Card, CardBody, CardSubtitle, CardTitle, Col} from 'reactstrap';
 import Chart from 'chart.js';
+import Cookies from 'js-cookie';
+import QueryString from 'querystring';
 
-class KeywordComponent extends Component {
+class DataComponent extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      myState: 0
+      keyword: this.props.comp.keyword,
+      from: this.props.comp.from,
+      to: this.props.comp.to,
+      type: this.props.comp.type
     }
   }
 
   componentDidMount() {
-    if (this.props.comp.keyword === 'Microsoft')
-      this.createTrendsBar();
-    if (this.props.comp.keyword === 'Google')
-      this.createLineChart();
-    if (this.props.comp.keyword === 'Feevale')
-      this.createDoughnut();
-
+    this.fetchData();
   }
 
-  createTrendsBar() {
+  fetchData() {
+    let params = {
+      keyword: this.state.keyword,
+      from: this.state.from,
+      to: this.state.to,
+    };
+    let path = this.state.type === 'chart' ? 'chart?' : 'trends?';
+    fetch('http://localhost:8080/analytics/' + path + QueryString.stringify(params), {
+      headers: new Headers({
+        'Authorization': 'Bearer ' + Cookies.get('access_token'),
+      }),
+    })
+      .then(resp => resp.json())
+      .then(json => {
+        if (this.state.type === 'pie')
+          this.buildPieChart(json);
+        else if (this.state.type === 'trends')
+          this.buildTrendsChart(json);
+        else if (this.state.type === 'chart')
+          this.buildLineChart(json);
+      });
+  }
+
+  buildPieChart(json) {
+    let sentiments = [
+      json.sentiments.positive,
+      json.sentiments.negative,
+      json.sentiments.neutral
+    ];
     new Chart(this.node, {
       type: "doughnut",
       data: {
         labels: ["Positive", "Negative", "Neutral"],
         datasets: [
           {
-            data: [12, 19, 3],
+            data: sentiments,
             backgroundColor: [
               "rgb(20, 168, 27)",
               "rgb(229, 107, 107)",
@@ -40,26 +67,39 @@ class KeywordComponent extends Component {
     });
   }
 
-  createDoughnut() {
+  buildTrendsChart(json) {
+    let labels = Object.keys(json.trends);
+    let positives = [];
+    let neutrals = [];
+    let negatives  = [];
+
+    for (const key of labels) {
+      positives.push(json.trends[key].positive);
+      negatives.push(json.trends[key].negative);
+      neutrals.push(json.trends[key].neutral);
+    }
+
+    const max = Math.max(...(negatives.concat(positives).concat(neutrals)));
+
     new Chart(this.node, {
       type: 'bar',
       data: {
-        labels: ['Surface', 'Windows', 'Mobile'],
+        labels: labels,
         datasets: [{
           label: 'Positive',
           borderColor: "rgb(20, 168, 27)",
           backgroundColor: "rgb(20, 168, 27)",
-          data: [60, 70, 30]
+          data: positives
         }, {
           borderColor: "rgb(229, 107, 107)",
           backgroundColor: "rgb(229, 107, 107)",
           label: 'Negative',
-          data: [30, 20, 50]
+          data: negatives
         }, {
           borderColor: "rgb(232, 229, 67)",
           backgroundColor: "rgb(232, 229, 67)",
           label: 'Neutral',
-          data: [10, 20, 15]
+          data: neutrals
         }]
       },
       options: {
@@ -70,7 +110,7 @@ class KeywordComponent extends Component {
             type: 'linear',
             position: 'left',
             ticks: {
-              max: 100,
+              suggestedMax: max,
               min: 0
             }
           }, {
@@ -78,7 +118,7 @@ class KeywordComponent extends Component {
             type: 'linear',
             position: 'right',
             ticks: {
-              max: 100,
+              suggestedMax: max,
               min: 0
             },
           }]
@@ -87,32 +127,46 @@ class KeywordComponent extends Component {
     });
   }
 
-  createLineChart() {
+  buildLineChart(json) {
+    let labels = Object.keys(json);
+    let positives = [];
+    let neutrals = [];
+    let negatives  = [];
+
+    for (const key of labels) {
+      positives.push(json[key].positive);
+      negatives.push(json[key].negative);
+      neutrals.push(json[key].neutral);
+    }
+
+    const max = Math.max(...(negatives.concat(positives).concat(neutrals)));
+    const min = Math.min(...(negatives.concat(positives).concat(neutrals)));
+
     new Chart(this.node, {
       type: 'line',
       data: {
-        labels: ['January', 'February', 'March', 'April', 'May'],
+        labels: labels,
         datasets: [{
           borderColor: "rgb(20, 168, 27)",
           backgroundColor: "rgb(20, 168, 27)",
           label: 'Positive',
           yAxisID: 'A',
           fill: false,
-          data: [40, 50, 40, 60, 70]
+          data: positives
         }, {
           borderColor: "rgb(229, 107, 107)",
           backgroundColor: "rgb(229, 107, 107)",
           label: 'Negative',
           fill: false,
           yAxisID: 'B',
-          data: [40, 30, 50, 30, 40]
+          data: negatives
         }, {
           borderColor: "rgb(232, 229, 67)",
           backgroundColor: "rgb(232, 229, 67)",
           label: 'Neutral',
           fill: false,
           yAxisID: 'B',
-          data: [10, 20, 15, 15, 20]
+          data: neutrals
         }]
       },
       options: {
@@ -123,16 +177,16 @@ class KeywordComponent extends Component {
             type: 'linear',
             position: 'left',
             ticks: {
-              max: 100,
-              min: 0
+              suggestedMax: max,
+              suggestedMin: min
             }
           }, {
             id: 'B',
             type: 'linear',
             position: 'right',
             ticks: {
-              max: 100,
-              min: 0
+              suggestedMax: max,
+              suggestedMin: min
             },
             gridLines: {
               drawOnChartArea: false,
@@ -148,7 +202,7 @@ class KeywordComponent extends Component {
       <Col lg='6'>
         <Card>
           <CardBody>
-            <CardTitle>{this.props.comp.keyword}</CardTitle>
+            <CardTitle onClick={this.fetchData.bind(this)}>{this.props.comp.keyword}</CardTitle>
             <CardSubtitle>From {this.props.comp.from} to {this.props.comp.to}</CardSubtitle>
           </CardBody>
           <canvas
@@ -162,4 +216,4 @@ class KeywordComponent extends Component {
 
 }
 
-export default KeywordComponent;
+export default DataComponent;

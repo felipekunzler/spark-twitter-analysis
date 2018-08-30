@@ -10,10 +10,7 @@ import javax.annotation.Resource;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class AccumulatorService {
@@ -55,7 +52,7 @@ public class AccumulatorService {
             sentiments[currentGroup] = incrementSentiments(sentiments[currentGroup], keywords.get(i).getSentiments());
         }
 
-        Map<LocalDate, Sentiments> map = new HashMap<>(GROUPS);
+        Map<LocalDate, Sentiments> map = new TreeMap<>();
         for (int i = 0; i < GROUPS; i++) {
             LocalDate date = keywords.get(i * groupSize).getDate();
             map.put(date, sentiments[i]);
