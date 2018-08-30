@@ -1,20 +1,29 @@
 package com.twitteranalytics.web.controller;
 
-import com.twitteranalytics.web.domain.Component;
+import com.twitteranalytics.web.domain.Sentiments;
+import com.twitteranalytics.web.domain.TrendsBarData;
+import com.twitteranalytics.web.service.AccumulatorService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.security.Principal;
+import javax.annotation.Resource;
+import java.time.LocalDate;
+import java.util.Map;
 
 @RestController
 public class DataController {
 
-    @GetMapping("/analytics")
-    public Component getData(Principal principal) {
-        System.out.println(principal);
-        Component c = new Component();
-        c.setKeyword("Microsoft");
-        return c;
+    @Resource
+    private AccumulatorService accumulatorService;
+
+    @GetMapping("/analytics/trends")
+    public TrendsBarData getTrendsData(String keyword, String from, String to) {
+        return accumulatorService.computeTrendsData(keyword, LocalDate.parse(from), LocalDate.parse(to));
+    }
+
+    @GetMapping("/analytics/chart")
+    public Map<LocalDate, Sentiments> getChartData(String keyword, String from, String to) {
+        return accumulatorService.computeLineChartData(keyword, LocalDate.parse(from), LocalDate.parse(to));
     }
 
 }
