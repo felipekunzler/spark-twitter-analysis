@@ -34,3 +34,29 @@ form .btn.login-button, .btn.login-button:active {
     background-color: #5689b7f0 !important;
     border-color: #5689b7f0 !important;
 }
+
+.card-body .card-input {
+    width: fit-content;
+    background-color: transparent;
+    outline-style: none;
+    padding: 0 12px;
+    line-height: 0;
+    list-style-type: none;
+    height: calc(1.5rem + 2px);
+    color: black;
+    display: inline;
+}
+
+input.keyword {
+    font-weight: 500;
+    margin-right: 10px;
+}
+
+.card-body input.input-date {
+    width: 115px;
+    margin-top: 13px;
+}
+
+.edit-mode.card-body {
+    padding-bottom: 0.6rem;
+}

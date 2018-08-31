@@ -45,7 +45,7 @@ class NavigationBar extends React.Component {
                 <NavLink>Bem-vindo <span className={'current-user'}>{this.props.currentUser}</span>!</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href='#' onClick={this.handleSignOut.bind(this)}>Sign out</NavLink>
+                <NavLink href='# ' onClick={this.handleSignOut.bind(this)}>Sign out</NavLink>
               </NavItem>
             </Nav>
           </Collapse>

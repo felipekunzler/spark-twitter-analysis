@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Cookies from 'js-cookie';
-import {Button, Card, CardBody, CardImg, CardSubtitle, CardText, CardTitle, Col, Container, Row} from "reactstrap";
+import {Card, CardBody, CardSubtitle, CardTitle, Col, Container, Row} from "reactstrap";
 import Chart from "chart.js";
 import DataComponent from "./DataComponent";
 
@@ -25,6 +25,9 @@ class Dashboard extends Component {
       });
     new Chart(this.node, {
       type: "pie",
+      options: {
+        events: []
+      },
       data: {
         labels: ["...", "...", "..."],
         datasets: [
@@ -41,17 +44,24 @@ class Dashboard extends Component {
       <Container>
         <Row>
           {this.state.userComponents.map((data, i) => {
-              return (<DataComponent comp={data} key={i}/>)
+            return (<DataComponent comp={data} key={i}/>)
           })}
           <Col lg='6'>
             <Card>
               <CardBody>
-                <CardTitle>Keyword</CardTitle>
-                <CardSubtitle>From ... to ...</CardSubtitle>
+                <Row>
+                  <Col>
+                    <CardTitle>Keyword</CardTitle>
+                    <CardSubtitle>From ... to ...</CardSubtitle>
+                  </Col>
+                  <Col className={'text-right'}>
+                    <a href={'# '}><span>Criar novo componente</span></a>
+                  </Col>
+                </Row>
               </CardBody>
               <canvas id={'canvasA'}
-                style={{width: 538, height: 283}}
-                ref={node => (this.node = node)}
+                      style={{width: 538, height: 283}}
+                      ref={node => (this.node = node)}
               />
             </Card>
           </Col>
