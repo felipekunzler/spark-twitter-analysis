@@ -14,7 +14,7 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    fetch('http://localhost:8080/components', { // TODO: Get only users component
+    fetch('http://localhost:8080/components/search/findAllByUser?user=' + Cookies.get('username'), {
       headers: new Headers({
         'Authorization': 'Bearer ' + Cookies.get('access_token'),
       }),
@@ -39,6 +39,25 @@ class Dashboard extends Component {
     });
   }
 
+
+  createNewComponent(e) {
+    e.preventDefault();
+    const newComponents = this.state.userComponents;
+    newComponents.push({
+      keyword: "Keyword",
+      from: "2018-05-01",
+      to: "2018-06-10",
+      type: "pie",
+      editMode: true,
+      _links: {
+        self: {
+          href: null
+        }
+      }
+    });
+    this.setState({userComponents: newComponents});
+  }
+
   render() {
     return (
       <Container>
@@ -55,7 +74,7 @@ class Dashboard extends Component {
                     <CardSubtitle>From ... to ...</CardSubtitle>
                   </Col>
                   <Col className={'text-right'}>
-                    <a href={'# '}><span>Criar novo componente</span></a>
+                    <a href={'# '} onClick={this.createNewComponent.bind(this)}><span>Criar novo componente</span></a>
                   </Col>
                 </Row>
               </CardBody>

@@ -40,22 +40,23 @@ public class AccumulatorService {
     public Map<LocalDate, Sentiments> computeLineChartData(String keyword, LocalDate from, LocalDate to) {
         List<KeywordAnalysis> keywords = keywordStatisticsRepository.findByKeywordAndDateBetween(keyword.toLowerCase(), toInstant(from), toInstant(to));
 
-        Sentiments[] sentiments = new Sentiments[GROUPS];
+        int numberOfGroups = GROUPS > keywords.size() ? keywords.size() : GROUPS;
+        Sentiments[] sentiments = new Sentiments[numberOfGroups];
         for (int i = 0; i < sentiments.length; i++) {
             sentiments[i] = new Sentiments();
         }
 
-        int groupSize = keywords.size() / GROUPS;
-        int totalSize = groupSize * GROUPS;
+        int groupSize = numberOfGroups != 0 ? keywords.size() / numberOfGroups : 0;
+        int totalSize = groupSize * numberOfGroups;
         for (int i = 0; i < totalSize; i++) {
-            int currentGroup = i * GROUPS / totalSize;
+            int currentGroup = i * numberOfGroups / totalSize;
             sentiments[currentGroup] = incrementSentiments(sentiments[currentGroup], keywords.get(i).getSentiments());
         }
 
         Map<LocalDate, Sentiments> map = new TreeMap<>();
-        for (int i = 0; i < GROUPS; i++) {
-            LocalDate date = keywords.get(i * groupSize).getDate();
-            map.put(date, sentiments[i]);
+        for (int i = 0; i < numberOfGroups; i++) {
+                LocalDate date = keywords.get(i * groupSize).getDate();
+                map.put(date, sentiments[i]);
         }
         return map;
     }

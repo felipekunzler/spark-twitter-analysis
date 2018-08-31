@@ -16,7 +16,7 @@ class DataComponent extends Component {
       from: this.props.comp.from,
       to: this.props.comp.to,
       type: this.props.comp.type,
-      editMode: false,
+      editMode: this.props.comp.editMode,
       editKeyword: this.props.comp.keyword,
       editFrom: this.props.comp.from,
       editTo: this.props.comp.to,
@@ -31,6 +31,11 @@ class DataComponent extends Component {
   }
 
   fetchData() {
+    if (!this.state.selfUrl) {
+      this.buildEmptyChart();
+      return;
+    }
+
     let params = {
       keyword: this.state.keyword,
       from: this.state.from,
@@ -56,6 +61,23 @@ class DataComponent extends Component {
         if (oldChart)
           oldChart.destroy();
       });
+  }
+
+  buildEmptyChart() {
+    this.chart = new Chart(this.node, {
+      type: "pie",
+      options: {
+        events: []
+      },
+      data: {
+        labels: ["...", "...", "..."],
+        datasets: [
+          {
+            data: [12, 19, 3]
+          }
+        ]
+      }
+    });
   }
 
   buildPieChart(json) {
@@ -218,13 +240,18 @@ class DataComponent extends Component {
 
   dismissChanges(e) {
     e.preventDefault();
-    this.setState({
-      editMode: false,
-      editKeyword: this.state.keyword,
-      editType: this.state.type,
-      editFrom: this.state.from,
-      editTo: this.state.to
-    });
+    if (this.state.selfUrl) {
+      this.setState({
+        editMode: false,
+        editKeyword: this.state.keyword,
+        editType: this.state.type,
+        editFrom: this.state.from,
+        editTo: this.state.to
+      });
+    } else {
+      this.chart.destroy();
+      this.setState({enabled: false});
+    }
   }
 
   removeComponent(e) {
@@ -250,8 +277,12 @@ class DataComponent extends Component {
       from: this.state.editFrom,
       to: this.state.editTo
     });
-    fetch(this.state.selfUrl, {
-      method: 'PATCH',
+
+    let url = this.state.selfUrl ? this.state.selfUrl : 'http://localhost:8080/components/';
+    let method = this.state.selfUrl ? 'PATCH' : 'POST';
+
+    fetch(url, {
+      method: method,
       headers: new Headers({
         'Authorization': 'Bearer ' + Cookies.get('access_token'),
         'Content-Type': 'application/json'
@@ -260,10 +291,17 @@ class DataComponent extends Component {
         keyword: this.state.editKeyword,
         type: this.state.editType,
         from: this.state.editFrom,
-        to: this.state.editTo
+        to: this.state.editTo,
+        user: Cookies.get('username')
       })
     })
-      .then(() => this.fetchData());
+      .then((resp) => resp.json())
+      .then((resp) => {
+        this.setState({
+          selfUrl: resp._links.self.href
+        });
+        this.fetchData();
+      })
   }
 
   render() {

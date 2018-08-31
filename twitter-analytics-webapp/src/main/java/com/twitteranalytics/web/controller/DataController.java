@@ -18,12 +18,12 @@ public class DataController {
 
     @GetMapping("/analytics/trends")
     public TrendsBarData getTrendsData(String keyword, String from, String to) {
-        return accumulatorService.computeTrendsData(keyword, LocalDate.parse(from), LocalDate.parse(to));
+        return accumulatorService.computeTrendsData(keyword, LocalDate.parse(from).minusDays(1), LocalDate.parse(to).plusDays(1));
     }
 
     @GetMapping("/analytics/chart")
     public Map<LocalDate, Sentiments> getChartData(String keyword, String from, String to) {
-        return accumulatorService.computeLineChartData(keyword, LocalDate.parse(from), LocalDate.parse(to));
+        return accumulatorService.computeLineChartData(keyword, LocalDate.parse(from).minusDays(1), LocalDate.parse(to).plusDays(1));
     }
 
 }
