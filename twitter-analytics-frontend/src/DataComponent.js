@@ -49,17 +49,17 @@ class DataComponent extends Component {
     })
       .then(resp => resp.json())
       .then(json => {
-        let oldChart = this.chart;
-
+        if (this.chart) {
+          this.chart.destroy();
+          this.node.width = 900;
+          this.node.height = 475;
+        }
         if (this.state.type === 'pie')
           this.buildPieChart(json);
         else if (this.state.type === 'trends')
           this.buildTrendsChart(json);
         else if (this.state.type === 'chart')
           this.buildLineChart(json);
-
-        if (oldChart)
-          oldChart.destroy();
       });
   }
 
