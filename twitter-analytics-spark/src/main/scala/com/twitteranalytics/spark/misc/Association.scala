@@ -1,8 +1,7 @@
-package com.twitteranalytics.spark
+package com.twitteranalytics.spark.misc
 
 import org.apache.spark.ml.fpm.FPGrowth
 import org.apache.spark.sql.SparkSession
-
 
 object Association {
 
