@@ -40,6 +40,10 @@ public class Sentiments {
         this.neutral = neutral;
     }
 
+    public long total() {
+        return positive + negative + neutral;
+    }
+
     @Override
     public String toString() {
         return "Sentiments{" +
@@ -48,4 +52,5 @@ public class Sentiments {
                 ", neutral=" + neutral +
                 '}';
     }
+
 }

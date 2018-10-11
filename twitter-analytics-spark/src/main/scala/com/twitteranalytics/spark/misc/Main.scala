@@ -3,7 +3,6 @@ package com.twitteranalytics.spark.misc
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-import com.twitteranalytics.spark.twitter.TwitterScala.{Tweet, parseDate}
 import edu.stanford.nlp.process.Stemmer
 import org.apache.spark.sql.SparkSession
 import org.tartarus.snowball.ext.EnglishStemmer

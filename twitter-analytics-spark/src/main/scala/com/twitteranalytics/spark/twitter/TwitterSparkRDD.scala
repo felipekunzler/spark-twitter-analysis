@@ -26,9 +26,9 @@ object TwitterSparkRDD {
               .filter(_.length > 3)
               .filter(w => !StopWords.contains(w))
               .foreach { word =>
-                val sentiments = keyword.wordCount.getOrElse(word, new Sentiments)
+                val sentiments = keyword.trends.getOrElse(word, new Sentiments)
                 incrementSentiment(sentiments, tweet.sentiment)
-                keyword.wordCount.update(word, sentiments)
+                keyword.trends.update(word, sentiments)
               }
             keywords.append((keyword.keyword, keyword))
           }
@@ -38,11 +38,11 @@ object TwitterSparkRDD {
       .reduceByKey((a, b) => {
         a.sentiments.positive += b.sentiments.positive
         a.sentiments.negative += b.sentiments.negative
-        b.wordCount.keys.foreach(k => {
-          val sentiments = a.wordCount.getOrElse(k, new Sentiments())
-          sentiments.positive += b.wordCount(k).positive
-          sentiments.negative += b.wordCount(k).negative
-          a.wordCount.update(k, sentiments)
+        b.trends.keys.foreach(k => {
+          val sentiments = a.trends.getOrElse(k, new Sentiments())
+          sentiments.positive += b.trends(k).positive
+          sentiments.negative += b.trends(k).negative
+          a.trends.update(k, sentiments)
         })
         a
       })

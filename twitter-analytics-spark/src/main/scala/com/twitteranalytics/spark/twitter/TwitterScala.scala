@@ -23,9 +23,9 @@ object TwitterScala {
             .filter(_.length > 3)
             .filter(w => !StopWords.contains(w))
             .foreach { word =>
-              val sentiments = keyword.wordCount.getOrElse(word, new Sentiments)
+              val sentiments = keyword.trends.getOrElse(word, new Sentiments)
               incrementSentiment(sentiments, tweet.sentiment)
-              keyword.wordCount.update(word, sentiments)
+              keyword.trends.update(word, sentiments)
             }
         }
       }

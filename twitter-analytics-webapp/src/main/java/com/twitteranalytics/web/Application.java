@@ -44,9 +44,7 @@ public class Application implements CommandLineRunner {
     public void run(String... args) throws Exception {
         componentRepository.deleteAll();
         userRepository.deleteAll();
-        keywordStatisticsRepository.deleteAll();
         mockComponents();
-        mockStatistics();
 
         userRepository.save(new User("admin", hash("123")));
         userRepository.save(new User("user", hash("123")));
@@ -57,29 +55,27 @@ public class Application implements CommandLineRunner {
         System.out.println("User found with findAll():");
         userRepository.findAll().forEach(System.out::println);
 
-        System.out.println("Analysis found with findAll():");
-        keywordStatisticsRepository.findAll().forEach(System.out::println);
     }
 
     private void mockComponents() {
         Component c1 = new Component();
         c1.setKeyword("Microsoft");
-        c1.setFrom(LocalDate.of(2018, 5, 1));
-        c1.setTo(LocalDate.of(2018, 8, 10));
+        c1.setFrom(LocalDate.of(2000, 5, 1));
+        c1.setTo(LocalDate.of(2019, 8, 10));
         c1.setUser("admin");
         c1.setType("pie");
 
         Component c2 = new Component();
         c2.setKeyword("Microsoft");
-        c2.setFrom(LocalDate.of(2018, 5, 1));
-        c2.setTo(LocalDate.of(2018, 8, 10));
+        c2.setFrom(LocalDate.of(2000, 5, 1));
+        c2.setTo(LocalDate.of(2019, 8, 10));
         c2.setUser("admin");
         c2.setType("chart");
 
         Component c3 = new Component();
         c3.setKeyword("Microsoft");
-        c3.setFrom(LocalDate.of(2018, 5, 1));
-        c3.setTo(LocalDate.of(2018, 8, 10));
+        c3.setFrom(LocalDate.of(2000, 5, 1));
+        c3.setTo(LocalDate.of(2019, 8, 10));
         c3.setUser("admin");
         c3.setType("trends");
         componentRepository.save(c1);

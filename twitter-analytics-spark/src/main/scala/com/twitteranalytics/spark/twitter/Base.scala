@@ -19,19 +19,20 @@ object Base {
 
   case class Tweet(sentiment: Int, date: LocalDate, text: String)
 
-  class Sentiments(var positive: Int = 0, var negative: Int = 0) extends Serializable {
-    def total(): Int = positive + negative
+  case class Sentiments(var positive: Int = 0, var negative: Int = 0, var neutral: Int = 0) extends Serializable {
+    def total(): Int = positive + negative + neutral
   }
 
-  class Keyword(_keyword: String) extends Serializable {
+  case class Keyword(_keyword: String) extends Serializable {
     val sentiments = new Sentiments()
-    val wordCount = mutable.Map[String, Sentiments]()
+    val trends = mutable.Map[String, Sentiments]()
+    var date: LocalDate = _
 
     def keyword: String = _keyword.toLowerCase
 
     override def toString: String = {
       val sentimentStr = (t: (String, Sentiments)) => s"(${t._1} -> ${t._2.total()} (+${t._2.positive} -${t._2.negative}))"
-      val topWords = wordCount.toVector.sortWith(_._2.total > _._2.total).map(sentimentStr).slice(0, 20)
+      val topWords = trends.toVector.sortWith(_._2.total > _._2.total).map(sentimentStr).slice(0, 20)
       s"Keyword($keyword, +${sentiments.positive}, -${sentiments.negative})\n" + topWords.mkString("\n") + "\n"
     }
   }

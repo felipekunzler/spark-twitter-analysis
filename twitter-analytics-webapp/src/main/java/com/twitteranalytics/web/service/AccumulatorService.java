@@ -11,6 +11,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class AccumulatorService {
@@ -34,7 +35,19 @@ public class AccumulatorService {
                 accumulatedTrends.merge(entry.getKey(), entry.getValue(), this::incrementSentiments);
             }
         }
+
+        data.setTrends(filterTrends(accumulatedTrends, 7));
         return data;
+    }
+
+    private Map<String, Sentiments> filterTrends(Map<String, Sentiments> trends, int i) {
+        return trends.entrySet().stream()
+                .sorted(Comparator.<Map.Entry<String, Sentiments>, Long>comparing(k -> k.getValue().total()).reversed())
+                .limit(i)
+                .collect(Collectors.<Map.Entry<String, Sentiments>, String, Sentiments, Map<String, Sentiments>>toMap(
+                        Map.Entry::getKey, Map.Entry::getValue,
+                        (v1, v2) -> { throw new RuntimeException(); },
+                        TreeMap::new));
     }
 
     public Map<LocalDate, Sentiments> computeLineChartData(String keyword, LocalDate from, LocalDate to) {
@@ -55,8 +68,8 @@ public class AccumulatorService {
 
         Map<LocalDate, Sentiments> map = new TreeMap<>();
         for (int i = 0; i < numberOfGroups; i++) {
-                LocalDate date = keywords.get(i * groupSize).getDate();
-                map.put(date, sentiments[i]);
+            LocalDate date = keywords.get(i * groupSize).getDate();
+            map.put(date, sentiments[i]);
         }
         return map;
     }
