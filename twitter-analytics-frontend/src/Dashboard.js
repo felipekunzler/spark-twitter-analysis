@@ -45,8 +45,8 @@ class Dashboard extends Component {
     const newComponents = this.state.userComponents;
     newComponents.push({
       keyword: "Keyword",
-      from: "2018-05-01",
-      to: "2018-06-10",
+      from: "2009-01-01",
+      to: "2009-12-31",
       type: "pie",
       editMode: true,
       _links: {

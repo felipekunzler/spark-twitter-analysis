@@ -60,22 +60,22 @@ public class Application implements CommandLineRunner {
     private void mockComponents() {
         Component c1 = new Component();
         c1.setKeyword("Microsoft");
-        c1.setFrom(LocalDate.of(2000, 5, 1));
-        c1.setTo(LocalDate.of(2019, 8, 10));
+        c1.setFrom(LocalDate.of(2009, 1, 1));
+        c1.setTo(LocalDate.of(2009, 12, 31));
         c1.setUser("admin");
         c1.setType("pie");
 
         Component c2 = new Component();
         c2.setKeyword("Microsoft");
-        c2.setFrom(LocalDate.of(2000, 5, 1));
-        c2.setTo(LocalDate.of(2019, 8, 10));
+        c2.setFrom(LocalDate.of(2009, 1, 1));
+        c2.setTo(LocalDate.of(2009, 12, 31));
         c2.setUser("admin");
         c2.setType("chart");
 
         Component c3 = new Component();
         c3.setKeyword("Microsoft");
-        c3.setFrom(LocalDate.of(2000, 5, 1));
-        c3.setTo(LocalDate.of(2019, 8, 10));
+        c3.setFrom(LocalDate.of(2009, 1, 1));
+        c3.setTo(LocalDate.of(2009, 12, 31));
         c3.setUser("admin");
         c3.setType("trends");
         componentRepository.save(c1);

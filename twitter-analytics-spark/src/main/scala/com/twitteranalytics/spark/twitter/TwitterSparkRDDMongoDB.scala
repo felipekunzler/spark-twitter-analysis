@@ -23,7 +23,7 @@ object TwitterSparkRDDMongoDB {
 
   def twitter(spark: SparkSession): Unit = {
     val twitterData = "/Users/i851309/Downloads/training.1600000.processed.noemoticon.csv"
-    val monitoredKeywords = List("Microsoft", "Google", "Oracle", "Computer", "Internet", "Facebook", "Movies").map(_.toLowerCase)
+    val monitoredKeywords = List("Microsoft", "Google", "Oracle", "Computer", "Internet", "Facebook", "Movies", "Apple").map(_.toLowerCase)
 
     val client: MongoClient = MongoClient()
     val database: MongoDatabase = client.getDatabase("twitteranalytics")
