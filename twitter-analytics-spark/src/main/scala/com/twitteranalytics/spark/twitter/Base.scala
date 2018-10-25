@@ -12,7 +12,7 @@ object Base {
 
   val Positive: Int = 4
   val Negative: Int = 0
-  val StopWords = Source.fromFile("/Users/i851309/Downloads/stopwords.txt").getLines.toSet
+  val StopWords = Source.fromInputStream(getClass.getResourceAsStream("/stopwords.txt")).getLines.toSet
   val DateFormat = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss z yyyy")
 
   implicit val LocalDateOrdering: Ordering[LocalDate] = Ordering.by(_.toEpochDay)
@@ -59,6 +59,13 @@ object Base {
 
   def parseDate(date: String): LocalDate = {
     ZonedDateTime.parse(date, DateFormat).toLocalDate
+  }
+
+  def getOrDefault(args: Array[String], i: Int, default: String): String = {
+    if (args.length > i && args(i) != "-")
+      args(i)
+    else
+      default
   }
 
 }

@@ -7,17 +7,19 @@ import scala.collection.mutable
 
 object TwitterSparkRDD {
 
-  def twitter(spark: SparkSession): Unit = {
-    val twitterData = "/Users/i851309/Downloads/training.1600000.processed.noemoticon.csv"
-    val monitoredKeywords = List("Microsoft", "Google", "Oracle", "Computer", "Internet", "Facebook", "Movies").map(_.toLowerCase)
+  val MonitoredKeywords = List("Microsoft", "Google", "Oracle", "Computer", "Internet", "Facebook", "Movies").map(_.toLowerCase)
 
-    spark.sparkContext.textFile(twitterData)
+  def twitter(spark: SparkSession, dataPath: String, dataMultiplierFactor: Int) : Unit = {
+
+    spark.sparkContext.textFile(List.fill(dataMultiplierFactor)(dataPath).mkString(","))
       .map(lineToTweet)
+      .filter(matchesAnyKeyword)
+      .map(t => t) // makes sense to become keyword? it doesn have a keyword..
       .flatMap(tweet => {
         val keywords = mutable.Buffer[(String, Keyword)]()
-        monitoredKeywords.foreach(monitoredKeyword => {
+        MonitoredKeywords.foreach(monitoredKeyword => {
           if (tweet.text.contains(monitoredKeyword)) {
-            val keyword = new Keyword(monitoredKeyword)
+            val keyword = Keyword(monitoredKeyword)
             incrementSentiment(keyword.sentiments, tweet.sentiment)
             tweet.text.split(" ")
               .map(_.replaceAll("\\W+", ""))
@@ -39,7 +41,7 @@ object TwitterSparkRDD {
         a.sentiments.positive += b.sentiments.positive
         a.sentiments.negative += b.sentiments.negative
         b.trends.keys.foreach(k => {
-          val sentiments = a.trends.getOrElse(k, new Sentiments())
+          val sentiments = a.trends.getOrElse(k, Sentiments())
           sentiments.positive += b.trends(k).positive
           sentiments.negative += b.trends(k).negative
           a.trends.update(k, sentiments)
@@ -47,20 +49,34 @@ object TwitterSparkRDD {
         a
       })
       .map(_._2)
-      .foreach(println)
+      .coalesce(1)
+      //.foreach(println)
+      .saveAsTextFile(s"twitter-output/job-${System.currentTimeMillis()}")
+  }
+
+  def matchesAnyKeyword(tweet: Tweet): Boolean = {
+    for (keyword <- MonitoredKeywords) {
+      if (tweet.text.contains(keyword))
+        return true
+    }
+    false
   }
 
   def main(args: Array[String]) {
+    println("Running with arguments: " + args.mkString(", "))
+    val data = getOrDefault(args, 0, "/Users/i851309/Downloads/twitter-dataset/training.1600000.processed.csv")
+    val multiplier = getOrDefault(args, 1, "1").toInt
+
     val spark = SparkSession.builder()
-      .appName("experiments").master("local[4]")
-      //      .config("spark.eventLog.enabled", value = true)
-      .config("spark.sql.shuffle.partitions", "5")
+      .appName("twitteranalysis")
+      //.master("local[4]")
+      //.config("spark.eventLog.enabled", value = true)
       .getOrCreate()
 
     spark.sparkContext.setLogLevel("WARN")
     val t0 = System.currentTimeMillis()
-    twitter(spark)
-    val elapsed = (System.currentTimeMillis() - t0) / 1000
+    twitter(spark, data, multiplier)
+    val elapsed = (System.currentTimeMillis() - t0) / 1000d
     println("Elapsed time: " + elapsed + " seconds")
   }
 

@@ -22,8 +22,8 @@ object TwitterSparkRDDMongoDB {
   case class CaseKeyword(keyword: String, sentiments: Sentiments, trends: mutable.Map[String, Sentiments], date: LocalDate) extends Serializable
 
   def twitter(spark: SparkSession): Unit = {
-    val twitterData = "/Users/i851309/Downloads/training.1600000.processed.noemoticon.csv"
-    val monitoredKeywords = List("Microsoft", "Google", "Oracle", "Computer", "Internet", "Facebook", "Movies", "Apple").map(_.toLowerCase)
+    val twitterData = "/Users/i851309/Downloads/twitter-dataset/training.1600000.processed.csv"
+    val monitoredKeywords = List("Microsoft", "Google", "Oracle", "Computer", "Internet", "Facebook", "Movies", "Apple", "Android", "Brazil", "Bing", "Madonna", "Jackson").map(_.toLowerCase)
 
     val client: MongoClient = MongoClient()
     val database: MongoDatabase = client.getDatabase("twitteranalytics")
@@ -96,7 +96,6 @@ object TwitterSparkRDDMongoDB {
     val spark = SparkSession.builder()
       .appName("experiments").master("local[4]")
       //      .config("spark.eventLog.enabled", value = true)
-      .config("spark.sql.shuffle.partitions", "5")
       .getOrCreate()
 
     spark.sparkContext.setLogLevel("WARN")
