@@ -78,7 +78,7 @@ object Main {
   implicit val LocalDateOrdering: Ordering[LocalDate] = Ordering.by(_.toEpochDay)
 
   def twitter(spark: SparkSession): Unit = {
-    val twitterData = "/Users/i851309/Downloads/training.1600000.processed.noemoticon.csv"
+    val twitterData = "/Users/i851309/projects/spark-scala/projeto-integrador/dataset/training.1600000.processed.noemoticon.csv"
     import spark.implicits._
 
     val ds = spark.read.option("inferSchema", "true").csv(twitterData)

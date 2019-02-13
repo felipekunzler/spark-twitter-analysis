@@ -17,7 +17,7 @@ object PopularWords {
   }
 
   def countWords(spark: SparkSession): Unit = {
-    val twitterData = "/Users/i851309/Downloads/training.1600000.processed.noemoticon.csv"
+    val twitterData = "/Users/i851309/projects/spark-scala/projeto-integrador/dataset/training.1600000.processed.noemoticon.csv"
     spark.sparkContext.textFile(twitterData)
       .map(lineToTweetText)
       .flatMap(_.split(" "))
@@ -30,7 +30,7 @@ object PopularWords {
       .filter(_._2 > 10)
       .sortBy(_._2, ascending = false)
       .repartition(1)
-      .saveAsTextFile("/Users/i851309/Downloads/wordCount")
+      .saveAsTextFile("/Users/i851309/projects/spark-scala/projeto-integrador/dataset/wordCount")
   }
 
   def lineToTweetText(line: String): String = {

@@ -41,7 +41,7 @@ object TwitterScala {
 
   def main(args: Array[String]): Unit = {
     println("Running with arguments: " + args.mkString(", "))
-    val data = getOrDefault(args, 0, "/Users/i851309/Downloads/twitter-dataset/training.1600000.processed.csv")
+    val data = getOrDefault(args, 0, "/Users/i851309/projects/spark-scala/projeto-integrador/dataset/twitter-dataset/training.1600000.processed.csv")
     val multiplier = getOrDefault(args, 1, "1").toInt
     val start = System.currentTimeMillis()
     run(data, multiplier)

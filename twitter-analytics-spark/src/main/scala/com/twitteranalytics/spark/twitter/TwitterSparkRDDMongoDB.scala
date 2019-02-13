@@ -22,7 +22,7 @@ object TwitterSparkRDDMongoDB {
   case class CaseKeyword(keyword: String, sentiments: Sentiments, trends: mutable.Map[String, Sentiments], date: LocalDate) extends Serializable
 
   def twitter(spark: SparkSession): Unit = {
-    val twitterData = "/Users/i851309/Downloads/twitter-dataset/training.1600000.processed.csv"
+    val twitterData = "/Users/i851309/projects/spark-scala/projeto-integrador/dataset/twitter-dataset/training.1600000.processed.csv"
     val monitoredKeywords = List("Microsoft", "Google", "Oracle", "Computer", "Internet", "Facebook", "Movies", "Apple", "Android", "Brazil", "Bing", "Madonna", "Jackson").map(_.toLowerCase)
 
     val client: MongoClient = MongoClient()
