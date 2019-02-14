@@ -103,6 +103,7 @@ object TwitterSparkRDDMongoDB {
     twitter(spark)
     val elapsed = (System.currentTimeMillis() - t0) / 1000
     println("Elapsed time: " + elapsed + " seconds")
+    spark.stop()
   }
 
 }

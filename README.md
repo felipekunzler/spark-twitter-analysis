@@ -1,5 +1,5 @@
 # Spark Twitter Analysis
-Dashboard to vizualize metrics from tweets of certain keywords.
+Analysis a twitter dataset with Spark and vizualize the results on a React dashboard.
 There are three main modules:
 1. `twitter-analytics-spark`: Spark program that processes a batch of tweets and stores useful data in MongoDB.
 2. `twitter-analytics-webapp`: SpringBoot Restful API that serves data previsouly analysed and manages users.
@@ -7,7 +7,7 @@ There are three main modules:
 
 ## Running
 * In `twitter-analytics-webapp` run `./gradlew build bootRun`.
-* In `twitter-analytics-spark` run the following class: `TwitterSparkRDDMongoDB` [Optional].
+* In `twitter-analytics-spark` run `sbt compile "runMain com.twitteranalytics.spark.twitter.TwitterSparkRDDMongoDB"` [Optional].
 * In `twitter-analytics-frontend` run `npm start`.
 
 ## Dashboard

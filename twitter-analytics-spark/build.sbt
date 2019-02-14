@@ -6,12 +6,12 @@ val sparkVersion = "2.3.1"
 
 // %% = appends scala version in dependency
 libraryDependencies ++= Seq(
-  "org.apache.spark" %% "spark-core" % sparkVersion % "provided",
-  "org.apache.spark" %% "spark-streaming" % sparkVersion % "provided",
-  "org.apache.spark" %% "spark-mllib" % sparkVersion % "provided",
+  "org.apache.spark" %% "spark-core" % sparkVersion,
+  "org.apache.spark" %% "spark-streaming" % sparkVersion,
+  "org.apache.spark" %% "spark-mllib" % sparkVersion,
   "edu.stanford.nlp" % "stanford-corenlp" % "3.9.1",
   "org.mongodb.scala" %% "mongo-scala-driver" % "2.4.2",
-  "org.apache.hadoop" % "hadoop-aws" % "2.7.7" % "provided"
+  "org.apache.hadoop" % "hadoop-aws" % "2.7.7"
     exclude("javax.servlet",     "servlet-api")
     exclude("javax.servlet.jsp", "jsp-api")
     exclude("org.mortbay.jetty", "servlet-api")
